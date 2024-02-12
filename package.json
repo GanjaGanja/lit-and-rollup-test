@@ -1,0 +1,17 @@
+{
+  "name": "lit-and-rollup-test",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Alexey Ses",
+  "license": "ISC",
+  "engines": {
+    "npm": ">= 10.2.3",
+    "node": ">= 20.10.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "lit-html": "^3.1.2"
+  }
+}
