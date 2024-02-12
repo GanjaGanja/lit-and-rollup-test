@@ -1,20 +1,43 @@
 ## Test project to play with Lit components and Rollup
-Test project to play with Lit components and Rollup. Basic [rollup-starter-app](https://github.com/rollup/rollup-starter-app/) was used to configure Rollup.
+Test project to play with Lit components and Rollup. Basic [lit-html-build](https://github.com/PolymerLabs/lit-html-build/blob/master/README.md) was used to configure Rollup.
 
 ## Getting started
 ```bash
 npm install
 ```
 
-The `public/index.html` file contains a `<script src='bundle.js'>` tag, which means we need to create `public/bundle.js`. The `rollup.config.js` file tells Rollup how to create this bundle, starting with `src/main.js` and including all its dependencies.
+Example Rollup build for a lit-html project.
 
-`npm run build` builds the application to `public/bundle.js`, along with a sourcemap file for debugging.
+Produces a single build with an ES module bundle for modern browsers, and ES5 code + polyfills for older browsers. Tested on IE11, may work on some other older browsers.
 
-`npm start` launches a server, using [serve](https://github.com/zeit/serve). Navigate to [localhost:3000](http://localhost:3000).
+This example uses `<script type="module">` and `<script nomodule>` to serve the correct bundles to modern and legacy browsers. This approach allows you to serve two different JavaScript bundles while using static web serving.
 
-`npm run watch` will continually rebuild the application as your source files change.
+This approach has some limitations on Edge versions 16-18, which support JavaScript modules using the script tag, but not dynamic imports using the `import()` statement:
 
-`npm run dev` will run `npm start` and `npm run watch` in parallel.
+```html
+<!-- import using script tag -->
+<script type="module" src="./modules/my-module.js">
+```
+
+```js
+// Dynamic imports
+import('./modules/my-other-module.js').then((moduleObject) => {
+    // Do something with the module
+  });
+```
+
+If you use dynamic imports in your code and you need to support these legacy versions of Edge, the module/nomodule trick won't work for you. In this case, the easiest solution is to serve the legacy bundle for all browsers. You'll also need to switch to an output format that supports dynamic loading—such as [SystemJS](https://github.com/systemjs/systemjs).
+
+If you switch to SystemJS format, you'll need to load the SystemJS loader and call `System.import` to load your main module (instead of using `<script type="module">`).
+
+```html
+<!-- minimal SystemJS loader -->
+<script src="/node_modules/systemjs/dist/s.min.js"></script>
+<!-- load main bundle -->
+<script>
+  System.import('./bundle.js');
+</script>
+```
 
 ## License
-[GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.en.html).
+[GPL-3.0](LICENSE).
