@@ -7,4 +7,5 @@ class SomeHeader extends LitElement {
     `;
   }
 }
+
 customElements.define('some-header', SomeHeader);
