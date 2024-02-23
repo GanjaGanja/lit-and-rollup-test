@@ -2,31 +2,60 @@ import { LitElement, html } from 'lit';
 
 class ToDo extends LitElement {
   static properties = {
-    todos: { attribute: false },
+    _todos: {
+      type: Array,
+      // This property don't have a corresponding attribute, it's "internal reactive state"
+      state: true
+    },
+    todosComplete: {
+      type: Array
+    },
   };
 
   constructor() {
     super();
-    this.todos = ['Buy hand sanitizer', 'Shred cabbage', 'Learn TypeScript'];
+    this._todos = [];
   }
 
-  newToDo(e) {
+  addToDo(e) {
     // Mutating an object or array doesn't change the object reference, so it won't trigger an update
-    this.todos.push(e.target.value);
+    this._todos.push(e.target.value);
     e.target.value = '';
 
     // trigger the update manually
+    // Note: that requestUpdate() only causes the current component to update
     this.requestUpdate();
+  }
+
+  removeToDo(idxToRemove) {
+    // Mutating an object or array doesn't change the object reference, so it won't trigger an update
+    // This is another way of triggering an update
+    this._todos = this._todos.filter((_, i) => i !== idxToRemove);
+  }
+
+  getTodosTotal() {
+    return this._todos.length + this.todosComplete.length;
   }
 
   render() {
     return html`
+        <h2>Done</h2>
+        <ul>
+            ${this.todosComplete.map((todo) => html`
+                <li>
+                    <span>${todo}</span>
+                </li>`)}
+        </ul>
         <h2>To Do</h2>
         <ul>
-            ${this.todos.map((todo) => html`
-                <li>${todo}</li>`)}
+            ${this._todos.map((todo, idx) => html`
+                <li>
+                    <span>${todo}</span>
+                    <button @click="${() => this.removeToDo(idx)}" type="button">remove</button>
+                </li>`)}
         </ul>
-        <input @change=${this.newToDo}/>
+        <input @change=${this.addToDo}/>
+        <h2>Todos total: ${this.getTodosTotal()}</h2>
     `;
   }
 }

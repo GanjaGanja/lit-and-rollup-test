@@ -5,7 +5,7 @@ class SomeLayout extends LitElement {
   render() {
     return html`
         <some-header></some-header>
-        <to-do todos="['test here']"></to-do>
+        <to-do .todosComplete=${['Play with Lit components']}></to-do>
     `;
   }
 }
